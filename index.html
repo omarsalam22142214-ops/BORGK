@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أسرار  </title>
+    <title>أسرا</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -57,8 +57,48 @@
         .subtitle {
             text-align: center;
             color: #b2bec3;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 0.9em;
+        }
+
+        /* تصميم التابات */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.2);
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            color: #dcdde1;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 0;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .form-section.active {
+            display: block;
         }
 
         .form-row {
@@ -103,18 +143,16 @@
             transition: 0.3s;
         }
 
+        input::placeholder {
+            color: #8c8c8c;
+        }
+
         input:focus, select:focus {
             border-color: var(--primary);
             box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
         }
 
-        input[type="date"]::-webkit-calendar-picker-indicator,
-        input[type="time"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
-
-        button {
+        .action-btn {
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border: none;
@@ -129,7 +167,7 @@
             transition: 0.3s;
         }
 
-        button:hover {
+        .action-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
         }
@@ -216,6 +254,7 @@
 
         @media (max-width: 600px) {
             .form-row { flex-direction: column; gap: 0; }
+            .tabs { flex-direction: column; }
         }
     </style>
 </head>
@@ -223,41 +262,82 @@
 
     <div class="container">
         <h1>✨ الخريطة الفلكية الشاملة ✨</h1>
-        <div class="subtitle">تحليل عميق لشخصيتك، توافقاتك، وبرجك القمري</div>
+        <div class="subtitle">دليلك الكامل لمعرفة أسرار وشخصيات الأبراج</div>
         
-        <div class="form-row">
-            <div class="form-group">
-                <label for="birthdate">تاريخ الميلاد (إجباري):</label>
-                <input type="date" id="birthdate" required>
-            </div>
-            <div class="form-group">
-                <label for="gender">النوع:</label>
-                <select id="gender" required>
-                    <option value="male">ذكر</option>
-                    <option value="female">أنثى</option>
-                </select>
-            </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('personal')">حاسبة الأبراج الشخصية</button>
+            <button class="tab-btn" onclick="switchTab('general')">دليل الأبراج العام</button>
         </div>
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="birthtime">ساعة الولادة <span class="optional-badge">اختياري</span></label>
-                <input type="time" id="birthtime" title="لو متعرفش الساعة سيبها فاضية">
+        <!-- قسم الحاسبة الشخصية -->
+        <div id="personal-section" class="form-section active">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthdate">تاريخ الميلاد (إجباري):</label>
+                    <input type="text" id="birthdate" placeholder="مثال: 25/08/1995" dir="ltr" style="text-align: right;" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">النوع:</label>
+                    <select id="gender" required>
+                        <option value="male">ذكر</option>
+                        <option value="female">أنثى</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="timezone">توقيت البلد (التوقيت الشتوي):</label>
-                <select id="timezone" required>
-                    <option value="0">جرينتش (GMT)</option>
-                    <option value="1">أوروبا/تونس/الجزائر (GMT+1)</option>
-                    <option value="2" selected>مصر/ليبيا/السودان (GMT+2)</option>
-                    <option value="3">السعودية/العراق/الكويت (GMT+3)</option>
-                    <option value="4">الإمارات/عمان (GMT+4)</option>
-                </select>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthtime">ساعة الولادة <span class="optional-badge">اختياري</span></label>
+                    <input type="text" id="birthtime" placeholder="مثال: 14:30" dir="ltr" style="text-align: right;" title="لو متعرفش الساعة سيبها فاضية">
+                </div>
+                <div class="form-group">
+                    <label for="timezone">توقيت البلد:</label>
+                    <select id="timezone" required>
+                        <option value="0">جرينتش (GMT)</option>
+                        <option value="1">أوروبا/تونس/الجزائر (GMT+1)</option>
+                        <option value="2" selected>مصر/ليبيا/السودان (GMT+2)</option>
+                        <option value="3">السعودية/العراق/الكويت (GMT+3)</option>
+                        <option value="4">الإمارات/عمان (GMT+4)</option>
+                    </select>
+                </div>
             </div>
+
+            <button class="action-btn" onclick="calculatePersonalZodiac()">استخراج التحليل الفلكي</button>
         </div>
 
-        <button onclick="calculateZodiac()">استخراج التحليل الفلكي</button>
+        <!-- قسم دليل الأبراج العام -->
+        <div id="general-section" class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="general-sign">اختار البرج:</label>
+                    <select id="general-sign">
+                        <option value="الحمل">الحمل (21 مارس - 19 أبريل)</option>
+                        <option value="الثور">الثور (20 أبريل - 20 مايو)</option>
+                        <option value="الجوزاء">الجوزاء (21 مايو - 20 يونيو)</option>
+                        <option value="السرطان">السرطان (21 يونيو - 22 يوليو)</option>
+                        <option value="الأسد">الأسد (23 يوليو - 22 أغسطس)</option>
+                        <option value="العذراء">العذراء (23 أغسطس - 22 سبتمبر)</option>
+                        <option value="الميزان">الميزان (23 سبتمبر - 22 أكتوبر)</option>
+                        <option value="العقرب">العقرب (23 أكتوبر - 21 نوفمبر)</option>
+                        <option value="القوس">القوس (22 نوفمبر - 21 ديسمبر)</option>
+                        <option value="الجدي">الجدي (22 ديسمبر - 19 يناير)</option>
+                        <option value="الدلو">الدلو (20 يناير - 18 فبراير)</option>
+                        <option value="الحوت">الحوت (19 فبراير - 20 مارس)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="general-gender">النوع:</label>
+                    <select id="general-gender">
+                        <option value="male">ذكر</option>
+                        <option value="female">أنثى</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="action-btn" onclick="showGeneralZodiac()">عرض تفاصيل البرج</button>
+        </div>
 
+        <!-- النتيجة -->
         <div id="result">
             <div class="zodiac-header">
                 <div class="zodiac-name" id="zName"></div>
@@ -268,12 +348,12 @@
             </div>
             
             <div class="info-box">
-                <h3>👤 تحليل الشخصية (البرج الشمسي الأساسي):</h3>
+                <h3>👤 الصفات العامة والشخصية:</h3>
                 <p id="zDesc"></p>
             </div>
 
             <div class="info-box celebs-box">
-                <h3>🌟 مشاهير من نفس برجك:</h3>
+                <h3>🌟 مشاهير من نفس البرج:</h3>
                 <p id="zCelebs"></p>
             </div>
 
@@ -287,7 +367,7 @@
                 <p id="zIncompat"></p>
             </div>
 
-            <div class="info-box moon">
+            <div class="info-box moon" id="moonBox">
                 <h3>🌙 البرج القمري (عالمك الداخلي والمشاعر المخفية):</h3>
                 <p id="zMoon"></p>
             </div>
@@ -313,7 +393,7 @@
             </div>
 
             <div class="info-box advice-box">
-                <h3>💡 نصيحة ذهبية ليك (عشان تطور من نفسك):</h3>
+                <h3>💡 نصيحة ذهبية لتطوير الذات:</h3>
                 <p id="zAdvice"></p>
             </div>
         </div>
@@ -492,19 +572,33 @@
         };
 
         const moonZodiacData = {
-            "الحمل": "القمر في الحمل بيخليك من جواك طفل متحمس ومستعجل دايماً. ردود أفعالك العاطفية سريعة ومندفعة، بتغضب بسرعة وبتهدى بسرعة من غير ما تشيل جواك أي ضغينة.",
-            "الثور": "القمر في الثور بيعطيك هدوء وسلام داخلي رهيب. مشاعرك ثابتة وجذورها عميقة مش بتتغير بسهولة، وبتحتاج جداً للأمان المادي عشان تحس بالراحة العاطفية.",
-            "الجوزاء": "داخلك مليان دوشة أفكار وكلام مبيسكتش. إنت بتعبر عن مشاعرك بالمنطق والكلام أكتر ما بتعبر عنها بالإحساس. بتهرب من المشاعر العميقة التقيلة اللي بتوترك.",
-            "السرطان": "إنت من جواك كتلة مشاعر متحركة، حساس جداً وبتتأثر بأقل حركة. العيلة والبيت والأمان العاطفي هم محور ارتكازك. ذكرياتك بتتحكم في جزء كبير من نفسيتك.",
-            "الأسد": "القمر هنا بيخليك محتاج للتقدير والاهتمام باستمرار. من جواك درامي شوية وبتحب تعبر عن مشاعرك بوضوح. كرامتك العاطفية مهمة جداً ومستحيل تقبل الإهانة.",
-            "العذراء": "بتعبر عن حبك بالرعاية والاهتمام العملي الملموس. بتحلل مشاعرك بالمنطق، وممكن تكون قاسي جداً على نفسك في الانتقاد. بتحب الهدوء والنظام والنظافة عشان ترتاح.",
-            "الميزان": "مشاعرك دايماً مرتبطة بوجود شريك في حياتك، بتخاف وتكتئب جداً من الوحدة. بتحتاج للتوازن والسلام وبتهرب فوراً من أي صراعات عاطفية لأنها بتستنزفك.",
-            "العقرب": "أعمق وأعنف مكان للقمر. مشاعرك قوية ومكثفة جداً إما حب أعمى أو كراهية شديدة. عندك قدرة خارقة تقرا نوايا الناس. بتكتم مشاعرك وتداري ضعفك جداً بس مبتنساش.",
-            "القوس": "من جواك شخص متفائل وبيدور على المغامرة. بتحتاج مساحة حرية كبيرة جداً عشان تحس بالراحة النفسية. بتكره النكد ولما بتزعل بتفضل تسافر أو تغير جو بدل العياط.",
-            "الجدي": "بتتحكم في مشاعرك بصرامة وقسوة أحياناً. بتبان من بره بارد بس من جواك بتخاف من الرفض. الأمان النفسي بتاعك بيرتبط بنجاحك العملي واحترام الناس ليك.",
-            "الدلو": "إنت بتعرف تفصل مشاعرك عن عقلك تماماً. ردود أفعالك العاطفية ممكن تكون مفاجئة وغريبة. بتحب تحلل مشاعر الناس بس بتخاف تغوص في مشاعرك الشخصية.",
-            "الحوت": "زي الإسفنجة، بتمتص طاقة ومشاعر وحزن كل اللي حواليك فبتتعب نفسياً بسرعة. خيالي ورومانسي جداً. بتلجأ دايماً للخيال والفن أو العزلة عشان تهرب من قسوة الواقع."
+            "الحمل": "القمر في الحمل بيخليك من جواك طفل متحمس ومستعجل دايماً. ردود أفعالك العاطفية سريعة ومندفعة، بتغضب بسرعة وبتهدى بسرعة.",
+            "الثور": "القمر في الثور بيعطيك هدوء وسلام داخلي رهيب. مشاعرك ثابتة وجذورها عميقة مش بتتغير بسهولة، وبتحتاج جداً للأمان المادي.",
+            "الجوزاء": "داخلك مليان دوشة أفكار وكلام مبيسكتش. إنت بتعبر عن مشاعرك بالمنطق والكلام أكتر ما بتعبر عنها بالإحساس.",
+            "السرطان": "إنت من جواك كتلة مشاعر متحركة، حساس جداً وبتتأثر بأقل حركة. العيلة والبيت والأمان العاطفي هم محور ارتكازك.",
+            "الأسد": "القمر هنا بيخليك محتاج للتقدير والاهتمام باستمرار. من جواك درامي شوية وبتحب تعبر عن مشاعرك بوضوح.",
+            "العذراء": "بتعبر عن حبك بالرعاية والاهتمام العملي الملموس. بتحلل مشاعرك بالمنطق، وممكن تكون قاسي جداً على نفسك في الانتقاد.",
+            "الميزان": "مشاعرك دايماً مرتبطة بوجود شريك في حياتك، بتخاف وتكتئب جداً من الوحدة. بتحتاج للتوازن والسلام وبتهرب فوراً من أي صراعات.",
+            "العقرب": "أعمق وأعنف مكان للقمر. مشاعرك قوية ومكثفة جداً إما حب أعمى أو كراهية شديدة. عندك قدرة خارقة تقرا نوايا الناس.",
+            "القوس": "من جواك شخص متفائل وبيدور على المغامرة. بتحتاج مساحة حرية كبيرة جداً عشان تحس بالراحة النفسية.",
+            "الجدي": "بتتحكم في مشاعرك بصرامة وقسوة أحياناً. بتبان من بره بارد بس من جواك بتخاف من الرفض. الأمان النفسي بتاعك بيرتبط بنجاحك.",
+            "الدلو": "إنت بتعرف تفصل مشاعرك عن عقلك تماماً. ردود أفعالك العاطفية ممكن تكون مفاجئة وغريبة. بتحب تحلل مشاعر الناس.",
+            "الحوت": "زي الإسفنجة، بتمتص طاقة ومشاعر وحزن كل اللي حواليك فبتتعب نفسياً بسرعة. خيالي ورومانسي جداً. بتلجأ دايماً للخيال."
         };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('result').style.display = 'none';
+
+            if (tabId === 'personal') {
+                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+                document.getElementById('personal-section').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                document.getElementById('general-section').classList.add('active');
+            }
+        }
 
         function getSunSign(day, month) {
             if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return "الحمل";
@@ -525,50 +619,89 @@
         function getExactMoonSign(year, month, day, timeString, timezoneOffset) {
             let hours = 12;
             let minutes = 0;
-            
             if (timeString) {
                 let parts = timeString.split(':');
                 hours = parseInt(parts[0]);
                 minutes = parseInt(parts[1]);
             }
-
             let utcHours = hours - parseInt(timezoneOffset);
             let y = year;
             let m = month;
-            if (m <= 2) {
-                y -= 1;
-                m += 12;
-            }
+            if (m <= 2) { y -= 1; m += 12; }
             let a = Math.floor(y / 100);
             let b = 2 - a + Math.floor(a / 4);
-            
             let jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + ((utcHours + (minutes/60)) / 24.0) + b - 1524.5;
             let d = jd - 2451545.0;
-            
             let L = (218.316 + 13.176396 * d) % 360;
             if (L < 0) L += 360;
-            
             let M = (134.963 + 13.064993 * d) % 360;
             if (M < 0) M += 360;
-            
             let lambda = (L + 6.289 * Math.sin(M * Math.PI / 180)) % 360;
             if (lambda < 0) lambda += 360;
-            
             let signIndex = Math.floor(lambda / 30);
             const moonSigns = ["الحمل", "الثور", "الجوزاء", "السرطان", "الأسد", "العذراء", "الميزان", "العقرب", "القوس", "الجدي", "الدلو", "الحوت"];
-            
             return moonSigns[signIndex];
         }
 
-        function calculateZodiac() {
-            const dateInput = document.getElementById("birthdate").value;
-            let timeInput = document.getElementById("birthtime").value;
+        function renderZodiacData(sign, gender, isPersonal, moonSign = null, isTimeProvided = false) {
+            const data = zodiacData[sign];
+            const resultDiv = document.getElementById("result");
+            
+            document.getElementById("zName").innerText = "برج " + sign;
+            document.getElementById("zElement").innerText = data.element;
+            document.getElementById("zPlanet").innerText = data.planet;
+            document.getElementById("zDesc").innerText = gender === 'male' ? data.male : data.female;
+            document.getElementById("zCelebs").innerText = data.celebs;
+            document.getElementById("zCompat").innerText = data.compat;
+            document.getElementById("zIncompat").innerText = data.incompat;
+            document.getElementById("zLove").innerText = data.love;
+            document.getElementById("zWork").innerText = data.work;
+            document.getElementById("zPros").innerText = data.pros;
+            document.getElementById("zCons").innerText = data.cons;
+            document.getElementById("zAdvice").innerText = data.advice;
+
+            const moonBox = document.getElementById("moonBox");
+            if (isPersonal && moonSign) {
+                const moonDesc = moonZodiacData[moonSign];
+                const noteHtml = isTimeProvided ? "" : "<br><small style='color: #aaa; margin-top:10px; display:block;'>* ملحوظة: عشان مدخلتش ساعة الولادة، تم حساب البرج القمري تقريبياً على الساعة 12 ظهراً لليوم ده.</small>";
+                document.getElementById("zMoon").innerHTML = `<strong>البرج القمري بتاعك هو: ${moonSign}</strong><br><br>${moonDesc}${noteHtml}`;
+                moonBox.style.display = "block";
+            } else {
+                moonBox.style.display = "none";
+            }
+
+            resultDiv.style.display = "block";
+            setTimeout(() => {
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        function calculatePersonalZodiac() {
+            const dateInput = document.getElementById("birthdate").value.trim();
+            let timeInput = document.getElementById("birthtime").value.trim();
             const timezone = document.getElementById("timezone").value;
             const gender = document.getElementById("gender").value;
-            const resultDiv = document.getElementById("result");
 
             if (!dateInput) {
-                alert("لازم تختار تاريخ ميلادك يا غالي عشان نقدر نحسب!");
+                alert("لازم تكتب تاريخ ميلادك يا غالي!");
+                return;
+            }
+
+            // التحقق من صيغة التاريخ
+            const dateRegex = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/;
+            const dateMatch = dateInput.match(dateRegex);
+            
+            if (!dateMatch) {
+                alert("صيغة التاريخ غلط يا غالي! اكتبه كده: يوم/شهر/سنة (مثال: 25/08/1995)");
+                return;
+            }
+
+            const day = parseInt(dateMatch[1], 10);
+            const month = parseInt(dateMatch[2], 10);
+            const year = parseInt(dateMatch[3], 10);
+
+            if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2100) {
+                alert("التاريخ اللي كتبته مش منطقي، راجع الأرقام وتأكد منها!");
                 return;
             }
 
@@ -576,46 +709,37 @@
             if (!timeInput) {
                 timeInput = "12:00"; 
                 isTimeProvided = false;
+            } else {
+                // التحقق من صيغة الوقت
+                const timeRegex = /^(\d{1,2}):(\d{2})$/;
+                const timeMatch = timeInput.match(timeRegex);
+                if (!timeMatch) {
+                    alert("صيغة الوقت غلط يا غالي! اكتبه كده: ساعة:دقيقة (مثال: 14:30)");
+                    return;
+                }
+                const hours = parseInt(timeMatch[1], 10);
+                const minutes = parseInt(timeMatch[2], 10);
+                if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+                    alert("الساعة مش منطقية! الساعات من 0 لـ 23 والدقايق من 0 لـ 59.");
+                    return;
+                }
             }
-
-            const date = new Date(dateInput);
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
 
             const sunSign = getSunSign(day, month);
             const moonSign = getExactMoonSign(year, month, day, timeInput, timezone);
 
-            if (sunSign && zodiacData[sunSign]) {
-                const data = zodiacData[sunSign];
-                
-                document.getElementById("zName").innerText = "برج " + sunSign;
-                document.getElementById("zElement").innerText = data.element;
-                document.getElementById("zPlanet").innerText = data.planet;
-                
-                document.getElementById("zDesc").innerText = gender === 'male' ? data.male : data.female;
-                
-                document.getElementById("zCelebs").innerText = data.celebs;
-                document.getElementById("zCompat").innerText = data.compat;
-                document.getElementById("zIncompat").innerText = data.incompat;
-
-                document.getElementById("zLove").innerText = data.love;
-                document.getElementById("zWork").innerText = data.work;
-                document.getElementById("zPros").innerText = data.pros;
-                document.getElementById("zCons").innerText = data.cons;
-                
-                document.getElementById("zAdvice").innerText = data.advice;
-                
-                const moonDesc = moonZodiacData[moonSign];
-                const noteHtml = isTimeProvided ? "" : "<br><small style='color: #aaa; margin-top:10px; display:block;'>* ملحوظة: عشان مدخلتش ساعة الولادة، تم حساب البرج القمري تقريبياً على الساعة 12 ظهراً لليوم ده.</small>";
-                
-                document.getElementById("zMoon").innerHTML = `<strong>البرج القمري بتاعك هو: ${moonSign}</strong><br><br>${moonDesc}${noteHtml}`;
-
-                resultDiv.style.display = "block";
-                setTimeout(() => {
-                    resultDiv.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
+            if (sunSign) {
+                renderZodiacData(sunSign, gender, true, moonSign, isTimeProvided);
+            } else {
+                alert("مش قادرين نحسب البرج، اتأكد إنك كاتب التاريخ بشكل صح!");
             }
+        }
+
+        function showGeneralZodiac() {
+            const sign = document.getElementById("general-sign").value;
+            const gender = document.getElementById("general-gender").value;
+            
+            renderZodiacData(sign, gender, false);
         }
     </script>
 </body>
